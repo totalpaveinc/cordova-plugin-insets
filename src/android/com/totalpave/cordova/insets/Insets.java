@@ -50,9 +50,11 @@ public class Insets extends CordovaPlugin {
                     return insets.consumeSystemWindowInsets();
                 }
                 this.insets = result;
-                PluginResult presult = new PluginResult(Status.OK, this.insets);
-                presult.setKeepCallback(true);
-                listener.sendPluginResult(presult);
+                if (listener == null) {
+                    PluginResult presult = new PluginResult(Status.OK, this.insets);
+                    presult.setKeepCallback(true);
+                    listener.sendPluginResult(presult);
+                }
                 return insets.consumeSystemWindowInsets();
             }
         );
@@ -73,9 +75,6 @@ public class Insets extends CordovaPlugin {
                         result.put("bottom", insets.getSystemWindowInsetBottom() / density);
                         result.put("left", insets.getSystemWindowInsetLeft() / density);
                         this.insets = result;
-                        PluginResult presult = new PluginResult(Status.OK, this.insets);
-                        presult.setKeepCallback(true);
-                        listener.sendPluginResult(presult);
                     } catch (JSONException e) {
                         e.printStackTrace();
                         listener.error(e.getMessage());
@@ -83,6 +82,9 @@ public class Insets extends CordovaPlugin {
                     }
                 }
             }
+            PluginResult presult = new PluginResult(Status.OK, this.insets);
+            presult.setKeepCallback(true);
+            listener.sendPluginResult(presult);
             return true;
         }
         return false;
