@@ -5,12 +5,14 @@
   "main": "www/insets.js",
   "types": "www/api.d.ts",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org",
+    "registry": "https://registry.totalpave.com:48731",
     "access": "public"
   },
   "scripts": {
     "build": "rollup -c rollup.config.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "version": "NODE_ENV=production npm run-script build",
+    "postversion": "git push && git push --tags",
+    "publish-dev": "npm publish --tag dev"
   },
   "repository": {
     "type": "git",
@@ -19,7 +21,7 @@
   "author": "norman.breau@totalpave.com",
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/totalpaveinc/cordova-plugin-sqlite/issues"
+    "url": "https://github.com/totalpaveinc/cordova-plugin-insets/issues"
   },
   "homepage": "https://github.com/totalpaveinc/cordova-plugin-insets#readme",
   "devDependencies": {
@@ -31,7 +33,6 @@
     "@rollup/plugin-commonjs": "22.0.2",
     "@rollup/plugin-node-resolve": "14.1.0",
     "@types/cordova": "0.0.34",
-    "eslint": "8.24.0",
     "rollup": "2.79.1",
     "rollup-plugin-progress": "1.1.2",
     "rollup-plugin-typescript2": "0.34.0",
