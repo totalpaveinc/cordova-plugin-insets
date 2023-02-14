@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="@totalpave/cordova-plugin-insets" version="0.0.0">
+  <name>cordova-plugin-insets</name>
+  <description>Cordova Android Plugin to receive native information regarding the unsafe area insets</description>
+  <author>Total Pave Inc.</author>
+  <license>Apache 2.0</license>
+  <keywords>cordova,cordova-android,unsafe-inset</keywords>
+  <repo>https://github.com/totalpaveinc/cordova-plugin-unsafe-insets</repo>
+
+  <js-module src="www/insets.js" name="Insets">
+    <clobbers target="totalpave" />
+  </js-module>
+
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="Insets">
+        <param name="android-package" value="com.totalpave.cordova.insets.Insets" />
+      </feature>
+    </config-file>
+
+    <source-file src="src/android/com/totalpave/cordova/insets/Insets.java" target-dir="src/com/totalpave/cordova/insets" />
+  </platform>
+</plugin>

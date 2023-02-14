@@ -1,0 +1,8 @@
+!www
+*.tsbuildinfo
+tsconfig.json
+*.tgz
+test
+third_party
+.vscode
+.gitmodules

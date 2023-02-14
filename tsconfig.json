@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "lib": ["DOM"],
+        "module": "ES2015",
+        "declaration": true,
+        "sourceMap": true,
+        "outDir": "./www",
+        "importHelpers": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "moduleResolution": "node",
+        "plugins": [],
+        "incremental": true
+    },
+    "exclude": [
+        "**/*.spec.ts",
+        "*/.spec.ts",
+        "test",
+        "lib",
+        "spec",
+        "node_modules",
+        "jest.config.ts",
+        "./www"
+    ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "@totalpave/cordova-plugin-insets",
+  "version": "0.0.0",
+  "description": "Cordova Android Plugin to receive native information regarding the unsafe area insets.",
+  "main": "www/insets.js",
+  "types": "www/api.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/totalpaveinc/cordova-plugin-insets.git"
+  },
+  "author": "norman.breau@totalpave.com",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/totalpaveinc/cordova-plugin-sqlite/issues"
+  },
+  "homepage": "https://github.com/totalpaveinc/cordova-plugin-insets#readme",
+  "devDependencies": {
+    "@babel/core": "7.19.3",
+    "@babel/preset-env": "7.19.3",
+    "@babel/preset-typescript": "7.18.6",
+    "@babel/register": "7.18.9",
+    "@rollup/plugin-babel": "5.3.1",
+    "@rollup/plugin-commonjs": "22.0.2",
+    "@rollup/plugin-node-resolve": "14.1.0",
+    "@types/cordova": "0.0.34",
+    "eslint": "8.24.0",
+    "rollup": "2.79.1",
+    "rollup-plugin-progress": "1.1.2",
+    "rollup-plugin-typescript2": "0.34.0",
+    "ts-node": "10.9.1",
+    "typescript": "4.8.4"
+  },
+  "engines": {
+    "cordovaDependencies": {
+      "0.0.0": {
+        "cordova-android": ">= 10"
+      }
+    }
+  },
+  "dependencies": {
+    "tslib": "2.4.0"
+  }
+}
