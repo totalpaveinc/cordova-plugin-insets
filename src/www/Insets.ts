@@ -55,7 +55,7 @@ export class Insets {
             cordova.exec(
                 (insets: IInsets) => {
                     Insets.insets = insets;
-                    for (let i = 0, listeners = Insets.listeners, length = listeners.length; i < length; ++i) {
+                    for (let i = 0, listeners = Insets.listeners.slice(), length = listeners.length; i < length; ++i) {
                         listeners[i](insets);
                     }
                 },
