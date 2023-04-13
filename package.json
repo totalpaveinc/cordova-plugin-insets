@@ -5,7 +5,7 @@
   "main": "www/insets.js",
   "types": "www/api.d.ts",
   "publishConfig": {
-    "registry": "https://registry.totalpave.com:48731",
+    "registry": "https://registry.npmjs.org",
     "access": "public"
   },
   "scripts": {
