@@ -37,8 +37,9 @@ export class Insets {
      * Initializes javascript side of the plugin.
      * 
      * This function is called automatically on deviceready.
+     * @internal
      */
-    public static init(): Promise<void> {
+    public static __init(): Promise<void> {
         if (this.initPromise) {
             return this.initPromise;
         }
@@ -88,5 +89,5 @@ export class Insets {
 };
 
 document.addEventListener('deviceready', function() {
-    Insets.init();
+    Insets.__init();
 });
