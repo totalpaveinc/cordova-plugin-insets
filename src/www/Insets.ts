@@ -23,6 +23,8 @@ export interface IInsets {
     left: number;
 }
 
+export type IInsetCallbackFunc = (inset: IInsets) => void;
+
 export class Insets {
     private static initPromise: Promise<void>;
     private static listeners: Array<Function> = [];
@@ -68,11 +70,11 @@ export class Insets {
         });
     }
 
-    public static addListener(callback: Function) {
+    public static addListener(callback: IInsetCallbackFunc) {
         this.listeners.push(callback);
     }
 
-    public static removeListener(callback: Function) {
+    public static removeListener(callback: IInsetCallbackFunc) {
         let index = this.listeners.indexOf(callback);
         if (index === -1) {
             return;

@@ -1,3 +1,7 @@
 
 // Core API
-export {Insets} from './Insets';
+export {
+    Insets,
+    IInsets,
+    IInsetCallbackFunc
+} from './Insets';
