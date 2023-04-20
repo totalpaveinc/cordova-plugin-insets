@@ -1,6 +1,6 @@
 {
   "name": "@totalpave/cordova-plugin-insets",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Cordova Android Plugin to receive native information regarding the unsafe area insets.",
   "main": "www/insets.js",
   "types": "www/api.d.ts",
