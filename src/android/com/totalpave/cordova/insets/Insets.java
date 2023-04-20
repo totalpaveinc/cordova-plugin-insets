@@ -36,18 +36,22 @@ public class Insets extends CordovaPlugin {
     @Override
     protected void pluginInitialize() {
         ViewCompat.setOnApplyWindowInsetsListener(
-            this.cordova.getActivity().findViewById(android.R.id.content), (v, insets) -> {
+            this.cordova.getActivity().findViewById(android.R.id.content), (v, insetProvider) -> {
                 JSONObject result = new JSONObject();
+                
                 try {
                     float density = this.cordova.getActivity().getResources().getDisplayMetrics().density;
-                    result.put("top", insets.getSystemWindowInsetTop() / density);
-                    result.put("right", insets.getSystemWindowInsetRight() / density);
-                    result.put("bottom", insets.getSystemWindowInsetBottom() / density);
-                    result.put("left", insets.getSystemWindowInsetLeft() / density);
 
+                    // Ideally, we'd import this, but it shares the same name as our plugin
+                    androidx.core.graphics.Insets insets = insetProvider.getInsets(WindowInsetsCompat.Type.systemBars());
+                    
+                    result.put("top", insets.top / density);
+                    result.put("right", insets.right / density);
+                    result.put("bottom", insets.bottom / density);
+                    result.put("left", insets.left / density);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    return insets.consumeSystemWindowInsets();
+                    return insetProvider.CONSUMED; // Stop dispatching to child views
                 }
                 this.insets = result;
                 if (listener != null) {
@@ -55,7 +59,7 @@ public class Insets extends CordovaPlugin {
                     presult.setKeepCallback(true);
                     listener.sendPluginResult(presult);
                 }
-                return insets.consumeSystemWindowInsets();
+                return insetProvider.CONSUMED; // Stop dispatching to child views
             }
         );
     }
@@ -64,29 +68,17 @@ public class Insets extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callback) throws JSONException, NumberFormatException {
         if (action.equals("setListener")) {
             listener = callback;
-            if (this.insets == null) {
-                WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(this.cordova.getActivity().findViewById(android.R.id.content));
-                if (insets != null) {
-                    JSONObject result = new JSONObject();
-                    try {
-                        float density = this.cordova.getActivity().getResources().getDisplayMetrics().density;
-                        result.put("top", insets.getSystemWindowInsetTop() / density);
-                        result.put("right", insets.getSystemWindowInsetRight() / density);
-                        result.put("bottom", insets.getSystemWindowInsetBottom() / density);
-                        result.put("left", insets.getSystemWindowInsetLeft() / density);
-                        this.insets = result;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        listener.error(e.getMessage());
-                        return true;
-                    }
+            cordova.getActivity().runOnUiThread(() -> {
+                if (this.insets == null) {
+                    // Trigger a inset dispatch (will eventually jump to the ApplyWindowInsetsListener above)
+                    ViewCompat.requestApplyInsets(cordova.getActivity().findViewById(android.R.id.content));
                 }
-            }
-            if (this.insets != null) {
-                PluginResult presult = new PluginResult(Status.OK, this.insets);
-                presult.setKeepCallback(true);
-                listener.sendPluginResult(presult);
-            }
+                else {
+                    PluginResult presult = new PluginResult(Status.OK, this.insets);
+                    presult.setKeepCallback(true);
+                    listener.sendPluginResult(presult);
+                }
+            });
             return true;
         }
         return false;
