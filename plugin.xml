@@ -8,7 +8,7 @@
   <repo>https://github.com/totalpaveinc/cordova-plugin-unsafe-insets</repo>
 
   <js-module src="www/insets.js" name="Insets">
-    <clobbers target="totalpave" />
+    <merges target="totalpave" />
   </js-module>
 
   <platform name="android">

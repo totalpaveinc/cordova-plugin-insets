@@ -4,6 +4,9 @@
 
 # Changelog
 
+## 0.1.7 (July 6, 2023)
+- Fixed clobbers namespace to merge instead, since this particular plugin targets a shared namespace.
+
 ## 0.1.6 (April 20, 2023)
 -   Replaced `insets.getSystemWindowInset*` usages that was deprecated in API 30.
 -   Replaced `insets.consumeSystemWindowInsets` usages that was deprecated in API 30.
