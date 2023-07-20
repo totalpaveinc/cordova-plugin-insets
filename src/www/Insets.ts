@@ -46,6 +46,12 @@ export class Insets {
             return this.initPromise;
         }
         this.initPromise = new Promise<void>((resolve, reject) => {
+            // no-op on iOS, still installs to iOS so apps don't need to do platform checks.
+            if (cordova.platformId === 'ios') {
+                resolve();
+                return;
+            }
+
             // Setup promise resolving mechanism.
             // We don't use the cordova callback functions as they will be called multiple times over the lifespan of an app.
             let func = () => {
