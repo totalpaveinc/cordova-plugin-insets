@@ -14,6 +14,20 @@
    limitations under the License.
 */
 
+export interface IInsetsAPI {
+    addListener: (callback: IInsetCallbackFunc) => void;
+    removeListener: (callback: IInsetCallbackFunc) => void;
+    getInsets: () => IInsets;
+}
+declare global {
+    interface ITotalpave {
+        Insets: IInsetsAPI;
+    }
+    interface Window {
+        totalpave: ITotalpave;
+    }
+}
+
 export const SERVICE_NAME: string = "Insets";
 
 export interface IInsets {
@@ -25,10 +39,10 @@ export interface IInsets {
 
 export type IInsetCallbackFunc = (inset: IInsets) => void;
 
-export class Insets {
-    private static initPromise: Promise<void>;
-    private static listeners: Array<Function> = [];
-    private static insets: IInsets = {
+class InsetsAPI implements IInsetsAPI {
+    private initPromise: Promise<void>;
+    private listeners: Array<Function> = [];
+    private insets: IInsets = {
         top: 0,
         right: 0,
         bottom: 0,
@@ -41,7 +55,7 @@ export class Insets {
      * This function is called automatically on deviceready.
      * @internal
      */
-    public static __init(): Promise<void> {
+    public __init(): Promise<void> {
         if (this.initPromise) {
             return this.initPromise;
         }
@@ -56,15 +70,16 @@ export class Insets {
             // We don't use the cordova callback functions as they will be called multiple times over the lifespan of an app.
             let func = () => {
                 resolve();
-                Insets.removeListener(func);
+                this.removeListener(func);
             }
-            Insets.addListener(func);
+            this.addListener(func);
 
             // Setup cordova callback.
+            let that = this;
             cordova.exec(
                 (insets: IInsets) => {
-                    Insets.insets = insets;
-                    for (let i = 0, listeners = Insets.listeners.slice(), length = listeners.length; i < length; ++i) {
+                    that.insets = insets;
+                    for (let i = 0, listeners = that.listeners.slice(), length = listeners.length; i < length; ++i) {
                         listeners[i](insets);
                     }
                 },
@@ -76,11 +91,11 @@ export class Insets {
         });
     }
 
-    public static addListener(callback: IInsetCallbackFunc) {
+    public addListener(callback: IInsetCallbackFunc) {
         this.listeners.push(callback);
     }
 
-    public static removeListener(callback: IInsetCallbackFunc) {
+    public removeListener(callback: IInsetCallbackFunc) {
         let index = this.listeners.indexOf(callback);
         if (index === -1) {
             return;
@@ -91,10 +106,12 @@ export class Insets {
     /**
      * @returns Last emitted insets.
      */    
-    public static getInsets(): IInsets {
-        return Insets.insets;
+    public getInsets(): IInsets {
+        return this.insets;
     }
 };
+
+export const Insets = new InsetsAPI();
 
 document.addEventListener('deviceready', function() {
     Insets.__init();
