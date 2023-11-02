@@ -43,7 +43,8 @@ public class Insets extends CordovaPlugin {
                     float density = this.cordova.getActivity().getResources().getDisplayMetrics().density;
 
                     // Ideally, we'd import this, but it shares the same name as our plugin
-                    androidx.core.graphics.Insets insets = insetProvider.getInsets(WindowInsetsCompat.Type.systemBars());
+                    int insetTypes = WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.systemBars();
+                    androidx.core.graphics.Insets insets = insetProvider.getInsets(insetTypes);
                     
                     result.put("top", insets.top / density);
                     result.put("right", insets.right / density);
