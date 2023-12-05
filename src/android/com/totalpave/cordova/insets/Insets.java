@@ -15,18 +15,19 @@
 */
 
 package com.totalpave.cordova.insets;
+
+import android.os.Build;
+import android.view.RoundedCorner;
+import android.view.WindowInsets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult.Status;
 import org.apache.cordova.PluginResult;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
-
 import java.lang.NumberFormatException;
 
 public class Insets extends CordovaPlugin {
@@ -45,11 +46,60 @@ public class Insets extends CordovaPlugin {
                     // Ideally, we'd import this, but it shares the same name as our plugin
                     int insetTypes = WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.systemBars();
                     androidx.core.graphics.Insets insets = insetProvider.getInsets(insetTypes);
+
+                    double topLeftRadius = 0.0;
+                    double topRightRadius = 0.0;
+                    double botLeftRadius = 0.0;
+                    double botRightRadius = 0.0;
+
+                    WindowInsets sourceInsets = insetProvider.toWindowInsets();
+                    if (sourceInsets != null) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            RoundedCorner topLeft = sourceInsets.getRoundedCorner(RoundedCorner.POSITION_TOP_LEFT);
+                            RoundedCorner topRight = sourceInsets.getRoundedCorner(RoundedCorner.POSITION_TOP_RIGHT);
+                            RoundedCorner botLeft = sourceInsets.getRoundedCorner(RoundedCorner.POSITION_BOTTOM_LEFT);
+                            RoundedCorner botRight = sourceInsets.getRoundedCorner(RoundedCorner.POSITION_BOTTOM_RIGHT);
+
+                            if (topLeft != null) {
+                                int radius = topLeft.getRadius();
+                                topLeftRadius = (double)radius / density;
+                            }
+
+                            if (topRight != null) {
+                                int radius = topRight.getRadius();
+                                topRightRadius = (double)radius / density;
+                            }
+
+                            if (botLeft != null) {
+                                int radius = botLeft.getRadius();
+                                botLeftRadius = (double)radius / density;
+                            }
+
+                            if (botRight != null) {
+                                int radius = botRight.getRadius();
+                                botRightRadius = (double)radius / density;
+                            }
+                        }
+                    }
+
+                    double top = insets.top / density;
+                    double right = insets.right / density;
+                    double bottom = insets.bottom / density;
+                    double left = insets.left / density;
+
+                    // These insets, if present may (and likely) exceed the rounded corner radius
+                    // Therefore, we will take the maximum value out of the two. If the inset is
+                    // greater, it will be used, otherwise the corner radius will be used as the inset.
+
+                    top = Math.max(Math.max(top, topLeftRadius), topRightRadius);
+                    bottom = Math.max(Math.max(bottom, botLeftRadius), botRightRadius);
+                    left = Math.max(Math.max(left, topLeftRadius), botLeftRadius);
+                    right = Math.max(Math.max(right, topRightRadius), botRightRadius);
                     
-                    result.put("top", insets.top / density);
-                    result.put("right", insets.right / density);
-                    result.put("bottom", insets.bottom / density);
-                    result.put("left", insets.left / density);
+                    result.put("top", top);
+                    result.put("right", right);
+                    result.put("bottom", bottom);
+                    result.put("left", left);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return insetProvider.CONSUMED; // Stop dispatching to child views
