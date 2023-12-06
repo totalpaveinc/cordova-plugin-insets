@@ -42,7 +42,7 @@
   "engines": {
     "cordovaDependencies": {
       "0.0.0": {
-        "cordova-android": ">= 10"
+        "cordova-android": ">= 11"
       }
     }
   },
