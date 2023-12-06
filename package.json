@@ -25,19 +25,19 @@
   },
   "homepage": "https://github.com/totalpaveinc/cordova-plugin-insets#readme",
   "devDependencies": {
-    "@babel/core": "7.23.2",
-    "@babel/preset-env": "7.23.2",
-    "@babel/preset-typescript": "7.23.2",
+    "@babel/core": "7.23.5",
+    "@babel/preset-env": "7.23.5",
+    "@babel/preset-typescript": "7.23.3",
     "@babel/register": "7.22.15",
-    "@rollup/plugin-babel": "6.0.3",
-    "@rollup/plugin-commonjs": "25.0.2",
-    "@rollup/plugin-node-resolve": "15.1.0",
-    "@types/cordova": "11.0.2",
-    "rollup": "3.26.2",
+    "@rollup/plugin-babel": "6.0.4",
+    "@rollup/plugin-commonjs": "25.0.7",
+    "@rollup/plugin-node-resolve": "15.2.3",
+    "@types/cordova": "11.0.3",
+    "rollup": "4.6.1",
     "rollup-plugin-progress": "1.1.2",
-    "rollup-plugin-typescript2": "0.35.0",
+    "rollup-plugin-typescript2": "0.36.0",
     "ts-node": "10.9.1",
-    "typescript": "5.2.2"
+    "typescript": "5.3.2"
   },
   "engines": {
     "cordovaDependencies": {
