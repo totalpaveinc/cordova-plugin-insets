@@ -3,3 +3,4 @@ www/*
 node_modules
 totalpave-cordova-plugin-insets-*.tgz
 test/www/js/app.js
+plugin.xml
