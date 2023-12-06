@@ -87,9 +87,8 @@ public class Insets extends CordovaPlugin {
                     double bottom = insets.bottom / density;
                     double left = insets.left / density;
 
-                    // These insets, if present may (and likely) exceed the rounded corner radius
-                    // Therefore, we will take the maximum value out of the two. If the inset is
-                    // greater, it will be used, otherwise the corner radius will be used as the inset.
+                    // Insets do not include rounded corner radius. If an inset is present, it generally will be big enough to cover the rounded corner. This is a coincidence, not a designed thing.
+                    // In either case, we need to determine how much space is required to cover the rounded corner and take the higher betwen the inset and the rounded corner.
 
                     top = Math.max(Math.max(top, topLeftRadius), topRightRadius);
                     bottom = Math.max(Math.max(bottom, botLeftRadius), botRightRadius);
