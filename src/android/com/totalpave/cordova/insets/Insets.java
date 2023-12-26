@@ -31,11 +31,31 @@ import org.json.JSONException;
 import java.lang.NumberFormatException;
 
 public class Insets extends CordovaPlugin {
+    public static final int DEFAULT_INSET_MASK = WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.systemBars();
+
     public CallbackContext listener;
     private JSONObject insets;
+    private int insetMask;
+    
+
+    private static class WebviewMask {
+        private WebviewMask() {}
+
+        public static final int CAPTION_BAR                 = 1;
+        public static final int DISPLAY_CUTOUT              = 1 << 1;
+        public static final int IME                         = 1 << 2;
+        public static final int MANDATORY_SYSTEM_GESTURES   = 1 << 3;
+        public static final int NAVIGATION_BARS             = 1 << 4;
+        public static final int STATUS_BARS                 = 1 << 5;
+        public static final int SYSTEM_BARS                 = 1 << 6;
+        public static final int SYSTEM_GESTURES             = 1 << 7;
+        public static final int TAPPABLE_ELEMENT            = 1 << 8;
+    }
 
     @Override
     protected void pluginInitialize() {
+        insetMask = DEFAULT_INSET_MASK;
+
         ViewCompat.setOnApplyWindowInsetsListener(
             this.cordova.getActivity().findViewById(android.R.id.content), (v, insetProvider) -> {
                 JSONObject result = new JSONObject();
@@ -44,8 +64,7 @@ public class Insets extends CordovaPlugin {
                     float density = this.cordova.getActivity().getResources().getDisplayMetrics().density;
 
                     // Ideally, we'd import this, but it shares the same name as our plugin
-                    int insetTypes = WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.systemBars();
-                    androidx.core.graphics.Insets insets = insetProvider.getInsets(insetTypes);
+                    androidx.core.graphics.Insets insets = insetProvider.getInsets(insetMask);
 
                     double topLeftRadius = 0.0;
                     double topRightRadius = 0.0;
@@ -131,6 +150,55 @@ public class Insets extends CordovaPlugin {
             });
             return true;
         }
+        else if (action.equals("setMask")) {
+            cordova.getActivity().runOnUiThread(() -> {
+                int mask = args.getInt(0);
+                ViewCompat.requestApplyInsets(cordova.getActivity().findViewById(android.R.id.content));
+                // TODO: Not using callback context and wanting to return the insets, but perhaps we should
+                // just make it return void and let the listener propagate the change?
+            });
+            return true;
+        }
         return false;
+    }
+
+    private int mapMask(int webviewMask) {
+        int insetTypeMask = 0;
+
+        if ((webviewMask & WebviewMask.CAPTION_BAR) != 0) {
+            insetTypeMask |= WindowInsetsCompat.Type.captionBar();
+        }
+
+        if ((webviewMask & WebviewMask.DISPLAY_CUTOUT) != 0) {
+            insetTypeMask |= WindowInsetsCompat.Type.displayCutout();
+        }
+
+        if ((webviewMask & WebviewMask.IME) != 0) {
+            insetTypeMask |= WindowInsetsCompat.Type.ime();
+        }
+
+        if ((webviewMask & WebviewMask.MANDATORY_SYSTEM_GESTURES) != 0) {
+            insetTypeMask |= WindowInsetsCompat.Type.mandatorySystemGestures();
+        }
+
+        if ((webviewMask & WebviewMask.NAVIGATION_BARS) != 0) {
+            insetTypeMask |= WindowInsetsCompat.Type.navigationBars();
+        }
+
+        if ((webviewMask & WebviewMask.STATUS_BARS) != 0) {
+            insetTypeMask |= WindowInsetsCompat.Type.statusBars();
+        }
+
+        if ((webviewMask & WebviewMask.SYSTEM_BARS) != 0) {
+            insetTypeMask |= WindowInsetsCompat.Type.systemBars();
+        }
+
+        if ((webviewMask & WebviewMask.SYSTEM_GESTURES) != 0) {
+            insetTypeMask |= WindowInsetsCompat.Type.systemGestures();
+        }
+
+        if ((webviewMask & WebviewMask.TAPPABLE_ELEMENT) != 0) {
+            insetTypeMask |= WindowInsetsCompat.Type.tappableElement();
+        }
     }
 }

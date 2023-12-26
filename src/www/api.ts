@@ -6,3 +6,4 @@ export {
     IInsets,
     IInsetCallbackFunc
 } from './Insets';
+export {InsetType} from './InsetType';

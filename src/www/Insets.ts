@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+import { InsetType } from './InsetType';
+
 export interface IInsetsAPI {
     addListener: (callback: IInsetCallbackFunc) => void;
     removeListener: (callback: IInsetCallbackFunc) => void;
@@ -48,6 +50,26 @@ class InsetsAPI implements IInsetsAPI {
         bottom: 0,
         left: 0
     };
+
+    public async setMask(mask: number): Promise<IInsets> {
+        if (cordova.platformId === 'ios') {
+            return this.insets;
+        }
+
+        return new Promise<IInsets>((resolve, reject) => {
+            let self = this;
+            cordova.exec(
+                (insets: IInsets) => {
+                    self.insets = insets;
+                    resolve(insets);
+                },
+                reject,
+                SERVICE_NAME,
+                "setMask",
+                [ mask ]
+            )
+        });
+    }
 
     /**
      * Initializes javascript side of the plugin.
