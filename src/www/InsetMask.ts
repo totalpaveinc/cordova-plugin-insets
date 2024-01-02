@@ -25,7 +25,7 @@
  * therefore the values here isn't a direct mapping, but will be resolved
  * appropriately.
  */
-export enum InsetType {
+export enum InsetMask {
     CAPTION_BAR                 = 1,
     DISPLAY_CUTOUT              = 1 << 1,
     IME                         = 1 << 2,

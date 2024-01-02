@@ -15,7 +15,7 @@ If your app suppots multiple platforms, the API calls to this plugin should be p
 
 ```javascript
 if (cordova.platform === 'android') {
-    let insets = totalpave.Insets.getInsets();
+    let insets = await window.totalpave.Inset.create();
 }
 ```
 

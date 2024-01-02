@@ -1,9 +1,10 @@
 
 // Core API
 export {
-    Insets,
-    IInsetsAPI,
-    IInsets,
-    IInsetCallbackFunc
-} from './Insets';
-export {InsetType} from './InsetType';
+    Inset,
+    IInsetAPI,
+    IInset,
+    IInsetCallbackFunc,
+    IInsetConfiguration
+} from './Inset';
+export {InsetMask} from './InsetMask';

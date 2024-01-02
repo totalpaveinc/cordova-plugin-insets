@@ -4,7 +4,45 @@
 
 # Changelog
 
-## 0.2.0 (TBD)
+## 0.3.0 (TBD)
+
+### Breaking Changes:
+
+#### Depluralize symbols
+
+Several symbols were written in plural form which goes against common naming
+conventions. In effort to make the API a bit cleaner, this was corrected.
+
+|Old Name|New Name|
+|---|---|
+|`Insets`|`Inset`|
+|`IInsetsAPI`|`IInsetAPI`|
+|`IInsets`|`IInset`|
+
+`window.totalpave.Insets` has been renamed to `window.totalpave.Inset`
+
+#### Inset API is no longer static
+
+The static `addListener`, `removeListener`, and `getInsets` APIs have been
+removed and replaced with non-static versions. Two new static methods are introduced:
+
+- `Inset.create`
+- `Inset.free`
+
+It is now the application's
+responsible to create their own `Inset` instance via `Inset.create`, passing
+in their own configuration object. An instance of `Inset` will be returned that
+can be used like before.
+
+Once the inset instance is no longer needed it will be desirable to free resources
+by calling `inset.free()` which will free up retained references allowing the
+objects to be garbage collected.
+
+Most use cases only calls for a single instance to be created for the application,
+but it is valid to create several `Inset` instances with different configuration
+parameters.
+
+## 0.2.0 (December 6, 2023)
 
 ### Breaking Changes:
 
