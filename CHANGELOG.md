@@ -29,8 +29,8 @@ removed and replaced with non-static versions. Two new static methods are introd
 - `Inset.create`
 - `Inset.free`
 
-It is now the application's
-responsible to create their own `Inset` instance via `Inset.create`, passing
+It is now the application's responsibility to create their own `Inset` instance via
+`Inset.create`, passing
 in their own configuration object. An instance of `Inset` will be returned that
 can be used like before.
 
