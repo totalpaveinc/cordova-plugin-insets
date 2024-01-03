@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class Insets extends CordovaPlugin {
+public class Inset extends CordovaPlugin {
     public static final int DEFAULT_INSET_MASK = WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.systemBars();
     public static final boolean DEFAULT_INCLUDE_ROUNDED_CORNERS = true;
 
