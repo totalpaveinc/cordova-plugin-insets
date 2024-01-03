@@ -11,17 +11,17 @@
   <keywords>cordova,cordova-android,unsafe-inset</keywords>
   <repo>https://github.com/totalpaveinc/cordova-plugin-unsafe-insets</repo>
 
-  <js-module src="www/insets.js" name="Insets">
+  <js-module src="www/insets.js" name="Inset">
     <merges target="totalpave" />
   </js-module>
 
   <platform name="android">
     <config-file target="res/xml/config.xml" parent="/*">
-      <feature name="Insets">
-        <param name="android-package" value="com.totalpave.cordova.insets.Insets" />
+      <feature name="Inset">
+        <param name="android-package" value="com.totalpave.cordova.insets.Inset" />
       </feature>
     </config-file>
 
-    <source-file src="src/android/com/totalpave/cordova/insets/Insets.java" target-dir="src/com/totalpave/cordova/insets" />
+    <source-file src="src/android/com/totalpave/cordova/insets/Inset.java" target-dir="src/com/totalpave/cordova/inset" />
   </platform>
 </plugin>

@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-package com.totalpave.cordova.insets;
+package com.totalpave.cordova.inset;
 
 import android.content.Context;
 import android.os.Build;

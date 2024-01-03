@@ -29,7 +29,7 @@ declare global {
     }
 }
 
-export const SERVICE_NAME: string = "Insets";
+export const SERVICE_NAME: string = "Inset";
 
 export interface IInset {
     top: number;
