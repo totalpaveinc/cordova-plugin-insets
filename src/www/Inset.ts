@@ -48,14 +48,14 @@ interface IInsetUpdateEvent extends IInsetEvent<IInset> {
 export class Inset { 
     private static $instances: Map<string, Inset> = new Map();
 
-    private $currentInsets: IInset;
+    private $currentInset: IInset;
     private $listeners: IInsetCallbackFunc[];
     private $id: string;
 
     private constructor(id: string) {
         this.$id = id;
         this.$listeners = [];
-        this.$currentInsets = {
+        this.$currentInset = {
             top: 0,
             left: 0,
             right: 0,
@@ -78,7 +78,12 @@ export class Inset {
      * @returns
      */
     public getInsets(): IInset {
-        return this.$currentInsets;
+        console.warn('getInsets() is deprecated, use getInset instead()', new Error().stack);
+        return this.getInset();
+    }
+
+    public getInset(): IInset {
+        return this.$currentInset;
     }
 
     /**
@@ -105,7 +110,7 @@ export class Inset {
      */
     public addListener(listener: IInsetCallbackFunc): void {
         this.$listeners.push(listener);
-        listener(this.$currentInsets);
+        listener(this.$currentInset);
     }
 
     /**
@@ -121,7 +126,7 @@ export class Inset {
     }
 
     private $onUpdate(insets: IInset): void {
-        this.$currentInsets = insets;
+        this.$currentInset = insets;
 
         for (let i = 0; i < this.$listeners.length; i++) {
             this.$listeners[i](insets);
