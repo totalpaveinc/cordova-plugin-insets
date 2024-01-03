@@ -102,7 +102,7 @@ instance.
 Creates a new `Inset` provider object with the given configuration. If the configuration object is missing, default values are used as indicated in [IInsetConfiguration](#23---iinsetconfiguration).
 
 The returned `Inset` instance can be used to attach listeners on for inset
-update notifications. When the provider is no longer needed, it should be freed by calling `[free()](#32---free).
+update notifications. When the provider is no longer needed, it should be freed by calling [free()](#32---free).
 
 Creating `Inset` objects will trigger a layout request, triggering an update on
 all inset providers.
