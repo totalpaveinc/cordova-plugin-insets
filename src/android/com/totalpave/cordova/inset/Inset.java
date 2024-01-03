@@ -65,7 +65,7 @@ public class Inset extends CordovaPlugin {
     public static class Listener {
         private final Context $context;
         private final CallbackContext $callback;
-        private JSONObject $currentInsets;
+        private JSONObject $currentInset;
         private final int $mask;
         private final boolean $includeRoundedCorners;
         private final UUID $id;
@@ -104,31 +104,31 @@ public class Inset extends CordovaPlugin {
                 if ($includeRoundedCorners && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     WindowInsets sourceInsets = insetProvider.toWindowInsets();
                     if (sourceInsets != null) {
-                            RoundedCorner topLeft = sourceInsets.getRoundedCorner(RoundedCorner.POSITION_TOP_LEFT);
-                            RoundedCorner topRight = sourceInsets.getRoundedCorner(RoundedCorner.POSITION_TOP_RIGHT);
-                            RoundedCorner botLeft = sourceInsets.getRoundedCorner(RoundedCorner.POSITION_BOTTOM_LEFT);
-                            RoundedCorner botRight = sourceInsets.getRoundedCorner(RoundedCorner.POSITION_BOTTOM_RIGHT);
+                        RoundedCorner topLeft = sourceInsets.getRoundedCorner(RoundedCorner.POSITION_TOP_LEFT);
+                        RoundedCorner topRight = sourceInsets.getRoundedCorner(RoundedCorner.POSITION_TOP_RIGHT);
+                        RoundedCorner botLeft = sourceInsets.getRoundedCorner(RoundedCorner.POSITION_BOTTOM_LEFT);
+                        RoundedCorner botRight = sourceInsets.getRoundedCorner(RoundedCorner.POSITION_BOTTOM_RIGHT);
 
-                            if (topLeft != null) {
-                                int radius = topLeft.getRadius();
-                                topLeftRadius = (double) radius / density;
-                            }
-
-                            if (topRight != null) {
-                                int radius = topRight.getRadius();
-                                topRightRadius = (double) radius / density;
-                            }
-
-                            if (botLeft != null) {
-                                int radius = botLeft.getRadius();
-                                botLeftRadius = (double) radius / density;
-                            }
-
-                            if (botRight != null) {
-                                int radius = botRight.getRadius();
-                                botRightRadius = (double) radius / density;
-                            }
+                        if (topLeft != null) {
+                            int radius = topLeft.getRadius();
+                            topLeftRadius = (double) radius / density;
                         }
+
+                        if (topRight != null) {
+                            int radius = topRight.getRadius();
+                            topRightRadius = (double) radius / density;
+                        }
+
+                        if (botLeft != null) {
+                            int radius = botLeft.getRadius();
+                            botLeftRadius = (double) radius / density;
+                        }
+
+                        if (botRight != null) {
+                            int radius = botRight.getRadius();
+                            botRightRadius = (double) radius / density;
+                        }
+                    }
                 }
 
                 double top = insets.top / density;
@@ -157,13 +157,13 @@ public class Inset extends CordovaPlugin {
                 return;
             }
 
-            this.$currentInsets = result;
+            this.$currentInset = result;
 
             JSONObject update = new JSONObject();
             try {
                 update.put("type", "update");
                 update.put("id", this.getID());
-                update.put("data", this.$currentInsets);
+                update.put("data", this.$currentInset);
             }
             catch (JSONException ex) {
                 throw new RuntimeException(ex);

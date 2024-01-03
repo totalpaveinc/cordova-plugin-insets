@@ -8,7 +8,7 @@ This document describes the public API available to library consumers.
 - [1.0 - General Notes](#10---general-notes)
   - [1.1 - TypeScript](#11---typescript)
 - [2.0 - Interfaces](#20---interfaces)
-  - [2.1 - IInsets](#21---iinsets)
+  - [2.1 - IInset](#21---iinset)
   - [2.2 - IInsetCallbackFunc](#22---iinsertcallbackfunc)
   - [2.3 - IInsetConfiguration](#23---iinsetconfiguration)
   - [2.4 - InsetMask](#24---insetmask)
@@ -17,7 +17,7 @@ This document describes the public API available to library consumers.
   - [3.2 - free](#32---free)
   - [3.3 - addListener](#33---addlistener)
   - [3.4 - removeListener](#34---removelistener)
-  - [3.5 - getInsets](#35---getinsets)
+  - [3.5 - getInset](#35---getinset)
 
 ## 1.0 - General Notes
 The namespace of this plugin is `window.totalpave.Inset`. It will become available after the `deviceready` event. Throughout this document, I'll refer to the `totalpave.Inset` object as `Inset`.
@@ -69,7 +69,7 @@ If `includeRoundedCorners` is not set, the default will be `true`.
 
 ### 2.4 - InsetMask
 
-An enumeration of mask values. These correlate to [WindowInsetesCompat.Type](https://developer.android.com/reference/androidx/core/view/WindowInsetsCompat.Type) though the values may not match, they are mapped during runtime.
+An enumeration of mask values. These correlate to [WindowInsetsCompat.Type](https://developer.android.com/reference/androidx/core/view/WindowInsetsCompat.Type) though the values may not match, they are mapped during runtime.
 
 Currently the following mask values are supported:
 
@@ -132,7 +132,7 @@ static free(inset?: Inset): Promise<void>;
 
 Attaches a new handler which will be invoked when the view layout/inset information changes. The reference of `callback` must be retained by the user for the [removeListener](#32---removelistener) call.
 
-When the callback is invoked, it will receive an [IInsets](#21---iinsets) object as an argument.
+When the callback is invoked, it will receive an [IInset](#21---iinset) object as an argument.
 
 ##### Signature
 
@@ -151,12 +151,12 @@ This will be a no-op if the `callback` is not in the listener pool.
 removeListener(callback: IInsetCallbackFunc): void;
 ```
 
-### 3.5 - getInsets
+### 3.5 - getInset
 
-Returns the last known [IInsets](#21---iinsets) object.
+Returns the last known [IInset](#21---iinset) object.
 
 ##### Signature
 
 ```typescript
-getInsets(): IInsets;
+getInset(): IInset;
 ```
