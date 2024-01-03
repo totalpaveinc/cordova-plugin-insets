@@ -47,6 +47,12 @@ Most use cases only calls for a single instance to be created for the applicatio
 but it is valid to create several `Inset` instances with different configuration
 parameters.
 
+A non-static version of `getInsets` as noted above was introduced replacing the
+static method. However `getInsets` is also deprecated in effort to de-pluralize
+the API for better naming conventions. It will be removed in a future release.
+
+Any usages of `getInsets` should use `getInset` instead.
+
 ## 0.2.0 (December 6, 2023)
 
 ### Breaking Changes:

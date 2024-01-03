@@ -285,8 +285,7 @@ public class Inset extends CordovaPlugin {
         String id = args.getString(0);
 
         synchronized ($listenerLock) {
-            Listener listener = $listenerMap.getOrDefault(id, null);
-            $listenerMap.remove(id);
+            Listener listener = $listenerMap.remove(id);
             if (listener != null) {
                 $listeners.remove(listener);
             }
