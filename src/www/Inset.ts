@@ -120,7 +120,7 @@ export class Inset {
         }
     }
 
-    public onUpdate(insets: IInset): void {
+    private $onUpdate(insets: IInset): void {
         this.$currentInsets = insets;
 
         for (let i = 0; i < this.$listeners.length; i++) {
@@ -179,7 +179,7 @@ export class Inset {
                             return;
                         }
 
-                        instance.onUpdate(e.data);
+                        instance.$onUpdate(e.data);
                     }
                 },
                 reject,
