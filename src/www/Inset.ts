@@ -1,5 +1,5 @@
 /*
-   Copyright 2022 Total Pave Inc.
+   Copyright 2022-2024 Total Pave Inc.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,6 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
+import {IInsetConfiguration} from './IInsetConfiguration';
+import {IInsetCallbackFunc} from './IInsetCallbackFunc';
+import {IInset} from './IInset';
 
 export interface IInsetAPI {
     addListener: (callback: IInsetCallbackFunc) => void;
@@ -31,13 +35,6 @@ declare global {
 
 export const SERVICE_NAME: string = "Inset";
 
-export interface IInset {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-}
-
 interface IInsetEvent<T = unknown> {
     type: 'init' | 'update';
     data: T;
@@ -46,25 +43,6 @@ interface IInsetEvent<T = unknown> {
 type IInsetInitEvent = IInsetEvent<string>;
 interface IInsetUpdateEvent extends IInsetEvent<IInset> {
     id: string;
-}
-
-export type IInsetCallbackFunc = (inset: IInset) => void;
-
-export interface IInsetConfiguration {
-    /**
-     * A bit mask of InsetMask
-     * 
-     * @defaults DISPLAY_CUTOUT | SYSTEM_BARS
-     */
-    mask?: number;
-
-    /**
-     * If true, includes rounded corners in the inset information
-     * Only available on Android API 31 ("S") and later.
-     * 
-     * @defaults true
-     */
-    includeRoundedCorners?: boolean;
 }
 
 export class Inset { 
