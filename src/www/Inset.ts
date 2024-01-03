@@ -18,21 +18,6 @@ import {IInsetConfiguration} from './IInsetConfiguration';
 import {IInsetCallbackFunc} from './IInsetCallbackFunc';
 import {IInset} from './IInset';
 
-export interface IInsetAPI {
-    addListener: (callback: IInsetCallbackFunc) => void;
-    removeListener: (callback: IInsetCallbackFunc) => void;
-    getInsets: () => IInset;
-}
-
-declare global {
-    interface ITotalpave {
-        Insets: IInsetAPI;
-    }
-    interface Window {
-        totalpave: ITotalpave;
-    }
-}
-
 export const SERVICE_NAME: string = "Inset";
 
 interface IInsetEvent<T = unknown> {
@@ -245,5 +230,14 @@ export class Inset {
 
     private static $isUpdateEvent(e: IInsetEvent): e is IInsetUpdateEvent {
         return e.type === 'update';
+    }
+}
+
+declare global {
+    interface ITotalpave {
+        Inset: Inset;
+    }
+    interface Window {
+        totalpave: ITotalpave;
     }
 }

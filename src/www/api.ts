@@ -1,8 +1,7 @@
 
 // Core API
 export {
-    Inset,
-    IInsetAPI
+    Inset
 } from './Inset';
 export {IInset} from './IInset';
 export {InsetMask} from './InsetMask';

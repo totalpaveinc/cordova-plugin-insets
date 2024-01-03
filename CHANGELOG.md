@@ -16,10 +16,15 @@ conventions. In effort to make the API a bit cleaner, this was corrected.
 |Old Name|New Name|
 |---|---|
 |`Insets`|`Inset`|
-|`IInsetsAPI`|`IInsetAPI`|
 |`IInsets`|`IInset`|
 
 `window.totalpave.Insets` has been renamed to `window.totalpave.Inset`
+
+The typescript global typedefs have been updated accordingly.
+
+#### IInsetAPI
+
+This type interface was removed, the `Inset` class can be referenced instead.
 
 #### Inset API is no longer static
 
