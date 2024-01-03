@@ -125,7 +125,13 @@ listener functions.
 ##### Signature
 
 ```typescript
-static free(inset?: Inset): Promise<void>;
+static free(inset: Inset): Promise<void>;
+```
+
+Alternatively, the inset can be freed by calling the instance member `free`.
+
+```typescript
+free(): Promise<void>;
 ```
 
 ### 3.3 - addListener
