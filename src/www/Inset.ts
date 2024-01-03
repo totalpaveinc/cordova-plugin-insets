@@ -30,15 +30,13 @@ interface IInsetUpdateEvent extends IInsetEvent<IInset> {
     id: string;
 }
 
-export class Inset { 
-    private static $instances: Map<string, Inset> = new Map();
-
+export class Inset {
     private $currentInset: IInset;
     private $listeners: IInsetCallbackFunc[];
     private $id: string;
 
-    private constructor(id: string) {
-        this.$id = id;
+    private constructor() {
+        this.$id = null;
         this.$listeners = [];
         this.$currentInset = {
             top: 0,
@@ -149,27 +147,22 @@ export class Inset {
             }
 
             if (cordova.platformId === 'ios') {
-                let instance: Inset = new Inset(Inset.$generateID());
-                Inset.$instances.set(instance.getID(), instance);
+                let instance: Inset = new Inset();
+                instance.$id = Inset.$generateID();
                 resolve(instance);
                 return;
             }
 
+            let inset: Inset = new Inset();
+
             cordova.exec(
                 (e: IInsetEvent) => {
                     if (Inset.$isInitEvent(e)) {
-                        let instance: Inset = new Inset(e.data); 
-                        Inset.$instances.set(instance.getID(), instance);
-                        resolve(instance);
+                        inset.$id = e.data;
+                        resolve(inset);
                     }
                     else if (Inset.$isUpdateEvent(e)) {
-                        let instance: Inset = Inset.$instances.get(e.id);
-                        if (!instance) {
-                            console.warn(`No Inset instance found at "${e.id}"`);
-                            return;
-                        }
-
-                        instance.$onUpdate(e.data);
+                        inset.$onUpdate(e.data);
                     }
                 },
                 reject,
@@ -206,14 +199,12 @@ export class Inset {
 
         return new Promise<void>((resolve, reject) => {
             if (cordova.platformId === 'ios') {
-                Inset.$instances.delete(id);
                 resolve();
                 return;
             }
 
             cordova.exec(
                 () => {
-                    Inset.$instances.delete(id);
                     resolve();
                 },
                 reject,
