@@ -16,6 +16,7 @@
 
 package com.totalpave.cordova.inset;
 
+import android.content.res.Configuration;
 import android.content.Context;
 import android.os.Build;
 import android.view.RoundedCorner;
@@ -136,16 +137,42 @@ public class Inset extends CordovaPlugin {
                 double bottom = insets.bottom / density;
                 double left = insets.left / density;
 
+                // First we will get the screen orientation. This may be locked by the user, so it
+                // may not match the physical orientation. If the orientation cannot be determined,
+                // we will assume PORTRAIT
+                int orientation = Configuration.ORIENTATION_UNDEFINED;
+
+                // There are other orientation types, albeit deprecated and supposedly no longer
+                // used, but this limits us from handling only portrait and landscape.
+                switch ($context.getResources().getConfiguration().orientation) {
+                    case Configuration.ORIENTATION_LANDSCAPE:
+                    case Configuration.ORIENTATION_PORTRAIT:
+                        orientation = $context.getResources().getConfiguration().orientation;
+                        break;
+                    case Configuration.ORIENTATION_SQUARE:
+                    case Configuration.ORIENTATION_UNDEFINED:
+                        // SQUARE is not used anymore since API 16, but included just to satisfy
+                        // lint warnings. If undefined, then fallback to PORTRAIT
+                        orientation = Configuration.ORIENTATION_PORTRAIT;
+                        break;
+                }
+
                 // Insets do not include rounded corner radius. If an inset is present, it
                 // generally will be big enough to cover the rounded corner. This is a coincidence,
                 // not a designed thing. In either case, we need to determine how much space is
                 // required to cover the rounded corner and take the higher between the inset and
                 // the rounded corner.
 
-                top = Math.max(Math.max(top, topLeftRadius), topRightRadius);
-                bottom = Math.max(Math.max(bottom, botLeftRadius), botRightRadius);
-                left = Math.max(Math.max(left, topLeftRadius), botLeftRadius);
-                right = Math.max(Math.max(right, topRightRadius), botRightRadius);
+                // If portrait, then top-left & top-right is applied to the top inset,
+                // and bot-left & bot-right is applied to the bottom inset
+                if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    top = Math.max(Math.max(top, topLeftRadius), topRightRadius);
+                    bottom = Math.max(Math.max(bottom, botLeftRadius), botRightRadius);
+                }
+                else {
+                    left = Math.max(Math.max(left, topLeftRadius), botLeftRadius);
+                    right = Math.max(Math.max(right, topRightRadius), botRightRadius);
+                }
 
                 result.put("top", top);
                 result.put("right", right);
