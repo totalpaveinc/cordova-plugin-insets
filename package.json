@@ -29,12 +29,12 @@
     "@rollup/plugin-commonjs": "25.0.7",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@types/cordova": "11.0.3",
-    "ejs": "3.1.9",
-    "rollup": "4.9.2",
+    "ejs": "3.1.10",
+    "rollup": "4.17.2",
     "rollup-plugin-progress": "1.1.2",
     "rollup-plugin-typescript2": "0.36.0",
     "ts-node": "10.9.2",
-    "typescript": "5.3.3"
+    "typescript": "5.4.5"
   },
   "engines": {
     "cordovaDependencies": {
