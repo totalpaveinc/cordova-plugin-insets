@@ -107,6 +107,8 @@ update notifications. When the provider is no longer needed, it should be freed 
 Creating `Inset` objects will trigger a layout request, triggering an update on
 all inset providers.
 
+NOTE: Configurations are only supported on Android as iOS does not have an underlying API to provide inset information by mask type. Therefore configuration details are silently ignored on iOS.
+
 ##### Signature
 
 ```typescript

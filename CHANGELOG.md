@@ -4,7 +4,23 @@
 
 # Changelog
 
-## 0.3.0 (TBD)
+## 0.4.0 (September 9, 2025)
+
+Introduced iOS implementation. While iOS's WKWebView has full support for CSS safe area insets, it does not consistently
+work properly. Particularly on app launch while the iOS device is under load / throttled CPU. In our testing, we found that when this issue occurs
+the native safe area inset reporting on `UIView` will continue to report accurately.
+
+The WKWebView bug is very likely related to [#191872](https://bugs.webkit.org/show_bug.cgi?id=191872), though slight difference of behaviour where the safe area insets gets "stuck" until something triggers a native relayout (e.g. displaying a native dialog).
+
+## 0.3.2 (September 27, 2024)
+
+Rolled dependencies. No API change.
+
+## 0.3.1 (Janurary 17, 2024)
+
+A fix for android to apply rounded corners to the appropriate sides only, which more closely matches iOS behaviour.
+
+## 0.3.0 (January 3, 2024)
 
 ### Breaking Changes:
 

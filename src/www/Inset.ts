@@ -116,14 +116,6 @@ export class Inset {
         }
     }
 
-    private static $generateID(): string {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = Math.random() * 16 | 0,
-                v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
-
     /**
      * Configures a new Inset instance to listen for inset changes
      * It's valid to have multiple instances, with different configurations
@@ -137,6 +129,9 @@ export class Inset {
      * single instance and share it rather than every object having it's own
      * inset listener instance.
      * 
+     * NOTE:    Configurations are only supported by Android. It is silently
+     *          ignored on iOS
+     * 
      * @param config 
      * @returns 
      */
@@ -144,13 +139,6 @@ export class Inset {
         return new Promise<Inset>((resolve, reject) => {
             if (!config) {
                 config = {};
-            }
-
-            if (cordova.platformId === 'ios') {
-                let instance: Inset = new Inset();
-                instance.$id = Inset.$generateID();
-                resolve(instance);
-                return;
             }
 
             let inset: Inset = new Inset();
@@ -198,11 +186,6 @@ export class Inset {
         }
 
         return new Promise<void>((resolve, reject) => {
-            if (cordova.platformId === 'ios') {
-                resolve();
-                return;
-            }
-
             cordova.exec(
                 () => {
                     resolve();
