@@ -8,6 +8,10 @@ On iOS, in rare circumstances the CSS safe area inset variables may resolve to i
 
 This plugin provides a work around to obtain these values in javascript. You will have to implement your own javascript code to actually start using these values in your CSS.
 
+## Installation
+
+`cordova plugin add @totalpave/cordova-plugin-insets`
+
 ## Supported Platforms
 
 - Android
