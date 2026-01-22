@@ -16,24 +16,19 @@
 
 #import <Foundation/Foundation.h>
 #import "TPIInset.h"
-#import "TPIInsetObserver.h"
+#import "TPIInsetObserverController.h"
 #import <UIKit/UIKit.h>
 
 @implementation TPIInset {
     NSMutableDictionary* $listeners;
-    TPIInsetObserver* $observer;
+    TPIInsetObserverController* $observer;
 }
 
 - (void) pluginInitialize {
-    self->$listeners = [[NSMutableDictionary alloc] init];
-    self->$observer = [[TPIInsetObserver alloc] init];
-    self->$observer.frame = self.viewController.view.frame;
-    self->$observer.userInteractionEnabled = false;
-    self->$observer.translatesAutoresizingMaskIntoConstraints = false;
-    
     __weak TPIInset* weakSelf = self;
     
-    self->$observer.safeAreaChanged = ^(UIEdgeInsets insets) {
+    self->$listeners = [[NSMutableDictionary alloc] init];
+    self->$observer = [[TPIInsetObserverController alloc] initWithSAICallback:^(UIEdgeInsets insets) {
         TPIInset* strongSelf = weakSelf;
         
         if (strongSelf == nil) {
@@ -46,24 +41,28 @@
                 [strongSelf emitInsetChange: value inset: insets];
             }
         }
-    };
+    }];
     
-    [self.viewController.view addSubview: self->$observer];
+    [self.viewController addChildViewController: self->$observer];
+
+    [self.viewController.view addSubview: self->$observer.view];
     
     [NSLayoutConstraint activateConstraints:@[
-        [self->$observer.topAnchor constraintEqualToAnchor:self.viewController.view.topAnchor],
-        [self->$observer.bottomAnchor constraintEqualToAnchor:self.viewController.view.bottomAnchor],
-        [self->$observer.leadingAnchor constraintEqualToAnchor:self.viewController.view.leadingAnchor],
-        [self->$observer.trailingAnchor constraintEqualToAnchor:self.viewController.view.trailingAnchor],
+        [self->$observer.view.topAnchor constraintEqualToAnchor:self.viewController.view.topAnchor],
+        [self->$observer.view.bottomAnchor constraintEqualToAnchor:self.viewController.view.bottomAnchor],
+        [self->$observer.view.leadingAnchor constraintEqualToAnchor:self.viewController.view.leadingAnchor],
+        [self->$observer.view.trailingAnchor constraintEqualToAnchor:self.viewController.view.trailingAnchor],
     ]];
+    
+    [self->$observer didMoveToParentViewController: self.viewController];
 }
 
 - (void) emitInsetChange:(NSDictionary*) listener inset:(UIEdgeInsets) inset {
     NSString* callbackID = [listener objectForKey: @"callbackID"];
-    
     if (callbackID == nil) return;
     
     NSString* ident = [listener objectForKey:@"id"];
+    
     if (ident == nil) return;
     
     NSDictionary* payload = @{
@@ -80,14 +79,6 @@
     CDVPluginResult* result = [CDVPluginResult resultWithStatus: CDVCommandStatus_OK messageAsDictionary: payload];
     [result setKeepCallbackAsBool: true];
     [self.commandDelegate sendPluginResult: result callbackId: callbackID];
-}
-
-- (UIEdgeInsets) $getViewInsets {
-    if (self.viewController.viewIfLoaded == nil) {
-        return UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
-    }
-    
-    return self.viewController.view.safeAreaInsets;
 }
 
 - (void) create:(CDVInvokedUrlCommand*) command {
@@ -110,7 +101,7 @@
     
     [self.commandDelegate sendPluginResult: result callbackId: command.callbackId];
     
-    [self emitInsetChange: listener inset: self->$observer.safeAreaInsets];
+    [self emitInsetChange: listener inset: self->$observer.view.safeAreaInsets];
 }
 
 - (void) delete:(CDVInvokedUrlCommand*) command {
@@ -125,8 +116,11 @@
 }
 
 - (void) dealloc {
-    [self->$observer removeFromSuperview];
+    [self->$observer willMoveToParentViewController: nil];
+    [self->$observer.view removeFromSuperview];
+    [self->$observer removeFromParentViewController];
     self->$observer.safeAreaChanged = nil;
+    self->$observer = nil;
 }
 
 @end
