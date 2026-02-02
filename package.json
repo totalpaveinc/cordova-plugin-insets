@@ -26,16 +26,16 @@
   },
   "homepage": "https://github.com/totalpaveinc/cordova-plugin-insets#readme",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "28.0.6",
+    "@rollup/plugin-commonjs": "29.0.0",
     "@rollup/plugin-node-resolve": "16.0.1",
     "@types/cordova": "11.0.3",
     "@types/node": "24.3.1",
-    "ejs": "3.1.10",
-    "rollup": "4.50.1",
+    "ejs": "4.0.1",
+    "rollup": "4.57.1",
     "rollup-plugin-progress": "1.1.2",
     "rollup-plugin-typescript2": "0.36.0",
     "ts-node": "10.9.2",
-    "typescript": "5.9.2"
+    "typescript": "5.9.3"
   },
   "engines": {
     "cordovaDependencies": {
