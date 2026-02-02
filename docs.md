@@ -18,6 +18,7 @@ This document describes the public API available to library consumers.
   - [3.3 - addListener](#33---addlistener)
   - [3.4 - removeListener](#34---removelistener)
   - [3.5 - getInset](#35---getinset)
+- [4.0 - Sample Code](#40---sample-code)
 
 ## 1.0 - General Notes
 The namespace of this plugin is `window.totalpave.Inset`. It will become available after the `deviceready` event. Throughout this document, I'll refer to the `totalpave.Inset` object as `Inset`.
@@ -168,3 +169,44 @@ Returns the last known [IInset](#21---iinset) object.
 ```typescript
 getInset(): IInset;
 ```
+
+## 4.0 - Sample Code
+
+The plugin concerns itself with reporting safe area values. How the app consumes them is entirely up to the app. A very basic example that goes straight to the point would look something like this:
+
+```js
+let insetProvider = await window.totalpave.Inset.create();
+insetProvider.addListener((insets) => {
+    let bottomOffset = insets.bottom;
+
+    let myDiv = document.getElementById('myDiv').style.marginBottom = bottomOffset + 'px';
+});
+```
+
+However, styling a lot of UI directly in the JS isn't very ideal, so a better method is to read the inset reports and set CSS variables which is then accessible from your CSS:
+
+```js
+let insetProvider = await window.totalpave.Inset.create();
+insetProvider.addListener((insets) => {
+    let r = document.querySelector(':root');
+
+    r.style.setProperty('--my-inset-top', `${insets.top}px`);
+    r.style.setProperty('--my-inset-bottom', `${insets.bottom}px`);
+    r.style.setProperty('--my-inset-left', `${insets.left}px`);
+    r.style.setProperty('--my-inset-right', `${insets.right}px`);
+});
+```
+
+This sets variables that can be referenced from CSS:
+
+```css
+#myDiv {
+    margin-bottom: var(--my-inset-bottom, env(safe-area-inset-bottom));
+}
+```
+
+Of course you can use `var(--my-inset-bottom)` anywhere you see fit in CSS, inside padding directives, or top/left/right/botton directives, etc...
+
+If `--my-inset-bottom` is not set, it falls back to the webview environment variable `env(safe-area-inset-bottom)`, useful if you're sharing web code between cordova and other web environments like a standard website.
+
+If you use a CSS preprocessor like Less, Stylus or Sass. It may be smart to create a macro to abstract the usages of the custom variable. There may be a time where this plugin becomes completely unnecessary.
