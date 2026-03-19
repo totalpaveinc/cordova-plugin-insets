@@ -209,7 +209,7 @@ export class Inset {
 
 declare global {
     interface ITotalpave {
-        Inset: Inset;
+        Inset: typeof Inset;
     }
     interface Window {
         totalpave: ITotalpave;
