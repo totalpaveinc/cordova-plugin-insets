@@ -135,12 +135,8 @@ export class Inset {
      * @param config 
      * @returns 
      */
-    public static create(config: IInsetConfiguration): Promise<Inset> {
+    public static create(config: IInsetConfiguration = {}): Promise<Inset> {
         return new Promise<Inset>((resolve, reject) => {
-            if (!config) {
-                config = {};
-            }
-
             let inset: Inset = new Inset();
 
             cordova.exec(
