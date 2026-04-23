@@ -20,6 +20,8 @@ import android.content.res.Configuration;
 import android.content.Context;
 import android.os.Build;
 import android.view.RoundedCorner;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowInsets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -247,12 +249,13 @@ public class Inset extends CordovaPlugin {
     private ArrayList<Listener> $listeners;
     private HashMap<String, Listener> $listenerMap;
     private final Object $listenerLock = new Object();
+    private volatile boolean $edgeToEdgeEnabled = false;
 
     @Override
     protected void pluginInitialize() {
         $listeners = new ArrayList<>();
         $listenerMap = new HashMap<>();
-        
+
         ViewCompat.setOnApplyWindowInsetsListener(
                 this.cordova.getActivity().findViewById(android.R.id.content), (v, insetProvider) -> {
 
@@ -262,9 +265,68 @@ public class Inset extends CordovaPlugin {
                         }
                     }
 
-                    return WindowInsetsCompat.CONSUMED;
+                    return insetProvider;
                 }
         );
+
+        // WebView-level listener that fires after CordovaActivity's rootLayout listener.
+        // Default mode: applies system bar margins for backward compatibility.
+        // Edge-to-edge mode: only applies IME margin for keyboard resize.
+        View wv = this.webView.getView();
+        if (wv != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(wv, (view, insets) -> {
+                androidx.core.graphics.Insets imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime());
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+                if (params == null) {
+                    return insets;
+                }
+
+                if ($edgeToEdgeEnabled) {
+                    int newBottom = imeInsets.bottom;
+                    if (newBottom != params.bottomMargin) {
+                        params.bottomMargin = newBottom;
+                        view.setLayoutParams(params);
+                    }
+                } else {
+                    androidx.core.graphics.Insets barInsets = insets.getInsets(
+                        WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout()
+                    );
+                    int newTop = barInsets.top;
+                    int newBottom = Math.max(barInsets.bottom, imeInsets.bottom);
+                    int newLeft = barInsets.left;
+                    int newRight = barInsets.right;
+                    if (params.topMargin != newTop || params.bottomMargin != newBottom
+                            || params.leftMargin != newLeft || params.rightMargin != newRight) {
+                        params.topMargin = newTop;
+                        params.bottomMargin = newBottom;
+                        params.leftMargin = newLeft;
+                        params.rightMargin = newRight;
+                        view.setLayoutParams(params);
+                    }
+                }
+                return insets;
+            });
+        }
+    }
+
+    private void $enableEdgeToEdge(CallbackContext callback) {
+        $edgeToEdgeEnabled = true;
+        cordova.getActivity().runOnUiThread(() -> {
+            View wv = this.webView.getView();
+            if (wv != null) {
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) wv.getLayoutParams();
+                if (params != null) {
+                    params.topMargin = 0;
+                    params.bottomMargin = 0;
+                    params.leftMargin = 0;
+                    params.rightMargin = 0;
+                    wv.setLayoutParams(params);
+                }
+                // Re-request insets so the IME-only listener path takes effect.
+                ViewCompat.requestApplyInsets(wv);
+            }
+        });
+        callback.success();
     }
 
     private void $createNewListener(CallbackContext callback, JSONArray args) {
@@ -329,6 +391,10 @@ public class Inset extends CordovaPlugin {
         }
         else if (action.equals("delete")) {
             $freeListener(callback, args);
+            return true;
+        }
+        else if (action.equals("enableEdgeToEdge")) {
+            $enableEdgeToEdge(callback);
             return true;
         }
 

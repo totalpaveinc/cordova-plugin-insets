@@ -201,6 +201,28 @@ export class Inset {
     private static $isUpdateEvent(e: IInsetEvent): e is IInsetUpdateEvent {
         return e.type === 'update';
     }
+   
+   /**
+   * Opts into edge-to-edge mode, removing the plugin's default
+   * safety margins on the WebView. Call before creating listeners
+   * when the app handles insets via CSS.
+   *
+   * For backward compatibility, the plugin applies system bar margins
+   * by default so apps that don't call this method remain safe.
+   */
+   public static enableEdgeToEdge(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            cordova.exec(
+                () => {
+                    resolve();
+                },
+                reject,
+                SERVICE_NAME,
+                "enableEdgeToEdge",
+                []
+            );
+        });
+    }
 }
 
 declare global {
