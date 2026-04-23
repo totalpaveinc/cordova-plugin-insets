@@ -4,6 +4,17 @@
 
 # Changelog
 
+## 0.4.5 (April 23, 2025)
+
+Fixes for Cordova-Android 15:
+
+- Moved Inset listener onto the webview instead of the root view -- this helps prevent on doubling up on insets.
+- When Cordova is operating in non-E2E mode, the webview is resized and positioned underneath the status bar, clearing the unsafe area.
+    However, Cordova does not consume the insets so the inset reading is still presented to child views, so safe area was still being reported
+    as if the webview content still rendered in unsafe areas. A workaround to adjust the safe area insets has been added to address this issue.
+- IME bit was added as to the default inset mask. This means if the keyboard is shown and invades the space of the webview, that metric will now
+    be included in the inset information.
+
 ## 0.4.0 (September 9, 2025)
 
 Introduced iOS implementation. While iOS's WKWebView has full support for CSS safe area insets, it does not consistently
