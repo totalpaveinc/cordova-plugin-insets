@@ -65,7 +65,7 @@ interface IInsetConfiguration {
 }
 ```
 
-If `mask` is not set, the default will be `DISPLAY_CUTOUT | SYSTEM_BARS`.
+If `mask` is not set, the default will be `DISPLAY_CUTOUT | SYSTEM_BARS | IME`.
 If `includeRoundedCorners` is not set, the default will be `true`.
 
 ### 2.4 - InsetMask
