@@ -262,7 +262,7 @@ public class Inset extends CordovaPlugin {
                         }
                     }
 
-                    return WindowInsetsCompat.CONSUMED;
+                    return insetProvider;
                 }
         );
     }
