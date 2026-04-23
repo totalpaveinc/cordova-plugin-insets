@@ -20,7 +20,9 @@ import android.content.res.Configuration;
 import android.content.Context;
 import android.os.Build;
 import android.view.RoundedCorner;
+import android.view.ViewGroup;
 import android.view.WindowInsets;
+
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import org.apache.cordova.CallbackContext;
@@ -88,7 +90,7 @@ public class Inset extends CordovaPlugin {
             return $id.toString();
         }
 
-        public void onInsetUpdate(WindowInsetsCompat insetProvider) {
+        public void onInsetUpdate(WindowInsetsCompat insetProvider, int adjustTop, int adjustLeft, int adjustBottom, int adjustRight) {
             JSONObject result = new JSONObject();
 
             try {
@@ -132,10 +134,21 @@ public class Inset extends CordovaPlugin {
                     }
                 }
 
-                double top = insets.top / density;
-                double right = insets.right / density;
-                double bottom = insets.bottom / density;
-                double left = insets.left / density;
+                // Cordova-Android 15+ offsets the WebView with margins equal to the system bar
+                // insets it consumes (in non-edge-to-edge mode), but still returns the raw insets
+                // unchanged so they propagate to children. We subtract those margins so we don't
+                // double-report insets that the host has already handled by repositioning the WebView.
+                double top = Math.max(0, insets.top - adjustTop) / density;
+                double right = Math.max(0, insets.right - adjustRight) / density;
+                double bottom = Math.max(0, insets.bottom - adjustBottom) / density;
+                double left = Math.max(0, insets.left - adjustLeft) / density;
+
+                // If the host covered an edge (non-zero margin), its view also covers the rounded
+                // corners on that edge — zero them out so they don't override the 0 inset above.
+                if (adjustTop    > 0) { topLeftRadius = 0.0; topRightRadius = 0.0; }
+                if (adjustBottom > 0) { botLeftRadius = 0.0; botRightRadius = 0.0; }
+                if (adjustLeft   > 0) { topLeftRadius = 0.0; botLeftRadius  = 0.0; }
+                if (adjustRight  > 0) { topRightRadius = 0.0; botRightRadius = 0.0; }
 
                 // First we will get the screen orientation. This may be locked by the user, so it
                 // may not match the physical orientation. If the orientation cannot be determined,
@@ -252,18 +265,25 @@ public class Inset extends CordovaPlugin {
     protected void pluginInitialize() {
         $listeners = new ArrayList<>();
         $listenerMap = new HashMap<>();
-        
-        ViewCompat.setOnApplyWindowInsetsListener(
-                this.cordova.getActivity().findViewById(android.R.id.content), (v, insetProvider) -> {
 
-                    synchronized($listenerLock) {
-                        for (Listener listener : $listeners) {
-                            listener.onInsetUpdate(insetProvider);
-                        }
-                    }
+        ViewCompat.setOnApplyWindowInsetsListener(webView.getView(), (v, insetProvider) -> {
+            // Cordova's inset listener on the parent rootLayout fires before ours and sets
+            // the WebView's margins to the insets it consumed. Reading those margins here
+            // tells us exactly how much has already been handled so we can subtract it.
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) webView.getView().getLayoutParams();
+            int adjustTop    = lp != null ? lp.topMargin    : 0;
+            int adjustLeft   = lp != null ? lp.leftMargin   : 0;
+            int adjustBottom = lp != null ? lp.bottomMargin : 0;
+            int adjustRight  = lp != null ? lp.rightMargin  : 0;
 
-                    return insetProvider;
+            synchronized($listenerLock) {
+                for (Listener listener : $listeners) {
+                    listener.onInsetUpdate(insetProvider, adjustTop, adjustLeft, adjustBottom, adjustRight);
                 }
+            }
+
+            return insetProvider;
+        }
         );
     }
 
