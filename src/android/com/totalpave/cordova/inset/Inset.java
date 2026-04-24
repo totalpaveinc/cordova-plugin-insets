@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class Inset extends CordovaPlugin {
-    public static final int DEFAULT_INSET_MASK = WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.IME();
+    public static final int DEFAULT_INSET_MASK = WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime();
     public static final boolean DEFAULT_INCLUDE_ROUNDED_CORNERS = true;
 
     public static class WebviewMask {
