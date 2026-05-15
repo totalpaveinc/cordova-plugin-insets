@@ -36,19 +36,6 @@
     self.view = view;
 }
 
-- (void) viewDidLoad {
-    [super viewDidLoad];
-    UIView* parent = self.view.superview;
-    if (!parent) return;
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [self.view.topAnchor constraintEqualToAnchor:parent.topAnchor],
-        [self.view.bottomAnchor constraintEqualToAnchor:parent.bottomAnchor],
-        [self.view.leadingAnchor constraintEqualToAnchor:parent.leadingAnchor],
-        [self.view.trailingAnchor constraintEqualToAnchor:parent.trailingAnchor],
-    ]];
-}
-
 - (void) dealloc {
     self.safeAreaChanged = nil;
     self.view = nil;
