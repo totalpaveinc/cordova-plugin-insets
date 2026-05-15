@@ -45,13 +45,13 @@
     
     [self.viewController addChildViewController: self->$observer];
 
-    [self.viewController.view addSubview: self->$observer.view];
+    [self.webView addSubview: self->$observer.view];
     
     [NSLayoutConstraint activateConstraints:@[
-        [self->$observer.view.topAnchor constraintEqualToAnchor:self.viewController.view.topAnchor],
-        [self->$observer.view.bottomAnchor constraintEqualToAnchor:self.viewController.view.bottomAnchor],
-        [self->$observer.view.leadingAnchor constraintEqualToAnchor:self.viewController.view.leadingAnchor],
-        [self->$observer.view.trailingAnchor constraintEqualToAnchor:self.viewController.view.trailingAnchor],
+        [self->$observer.view.topAnchor constraintEqualToAnchor:self.webView.topAnchor],
+        [self->$observer.view.bottomAnchor constraintEqualToAnchor:self.webView.bottomAnchor],
+        [self->$observer.view.leadingAnchor constraintEqualToAnchor:self.webView.leadingAnchor],
+        [self->$observer.view.trailingAnchor constraintEqualToAnchor:self.webView.trailingAnchor],
     ]];
     
     [self->$observer didMoveToParentViewController: self.viewController];
